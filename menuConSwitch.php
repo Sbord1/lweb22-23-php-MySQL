@@ -1,169 +1,84 @@
 <?php
+	error_reporting (E_ALL &~E_NOTICE);
+	require_once("./stileInterno.php");
+	session_start();                // sempre prima di qualunque contenuto htmnl ...
 
-// Controllo tipologia: se non e' settata allora il login non e' stato effettuato
-if (!isset($_SESSION['tipologia'])) { //no login
-    
-    // escaping from interspersed.php
-?>
+	if (!isset($_SESSION['accessoPermesso'])) header('Location: loginPage.html');
 
-    <!-- Se il login non e' stato effettuato (siamo un semplice visitatore) allora stampiamo il menu senza il carrello! -->
-    <table border="1" cellpadding="5" style="border-color: black; margin-left: auto; margin-right: auto;">
-        <tbody>
-            <tr>
-                <td style="background-color: lightgray;">
-                    <a href="index.php">Home</a>
-                </td>
+// dati sul database e le tabelle (magari messi in un file a parte ...)
+	$db_name = "VideotecaOnlinedb";
+	$totale= $_SESSION['sommeDaPagare'];
 
-                <td style="background-color: lightgray;">
-                    <a href="AdventureMovies.php">Avventura</a>
-                </td>
 
-                <td style="background-color: lightgray;">
-                    <a href="ActionMovies.php">Azione</a>
-                </td>
+// effettuazione della connessione al database
 
-                <td style="background-color: lightgray;">
-                    <a href="FantasyMovies.php">Fantascienza</a>
-                </td>
+	$mysqliConnection = new mysqli("localhost", "riccardo", "password", $db_name);
 
-                <td style="background-color: lightgray;">
-                    <a href="poliziesco.php">Poliziesco</a>
-                </td>
 
-                <td style="background-color: lightgray;">
-                    <a href="storico.php">Storico</a>
-                </td>
-                
-                
+// controllo della connessione (versione "procedurale,
+// as opposed to the "object-oriented version" msqli->connect_errno...
 
-                
-            </tr>    
-        </tbody>
-</table>
+	if (mysqli_connect_errno()) {
+    	printf("Oops, abbiamo problemi con la connessione al db: %s\n", mysqli_connect_error());
+    	exit();
+	}
 
-<?php
 
-}
 
-// Il login e' stato effettuato
-else {
-
-    // Un utente puo' essere di 2 tipi: user (cliente) oppure admin (amministratore)
-
-    switch($_SESSION['tipologia']) {
-
-        // Utente cliente loggato --> mostriamo il carrello nel menu
-        case "user":
-
-?>
-        <table border="1" cellpadding="5" style="border-color: black; margin-left: auto; margin-right: auto;">
-            <tbody>
-                <tr>
-                    <td style="background-color: lightgray;">
-                        <a href="index.php">Home</a>
-                    </td>
-
-                    <td style="background-color: lightgray;">
-                        <a href="AdventureMovies.php">Avventura</a>
-                    </td>
-
-                    <td style="background-color: lightgray;">
-                        <a href="ActionMovies.php">Azione</a>
-                    </td>
-
-                    <td style="background-color: lightgray;">
-                        <a href="FantasyMovies.php">Fantascienza</a>
-                    </td>
-
-                    <td style="background-color: lightgray;">
-                        <a href="poliziesco.php">Poliziesco</a>
-                    </td>
-
-                    <td style="background-color: lightgray;">
-                        <a href="storico.php">Storico</a>
-                    </td>
-
-                    <td style="background-color: lightgray;">
-                        <a href="thriller.php">Thriller</a>
-                    </td>
-                    
-                    <td style="background-color: white;">
-                        <a href="zonaPagamenti.php">
-                            <img src="loghi/cartLogo.png" alt="cart logo" height="20" />
-                        </a>
-                    </td>
-                    
-
-                </tr>    
-            </tbody>
-        </table>
-
-<?php
-        break;
-    
-        // Utente amministratore loggato
-        // --> mostriamo nel menu il bottone per aggiungere film e quello per vedere la lista di utenti registrati al sito
-        case "admin":
-?>
+	$output_table="";
+	$output_table.="<table style= \" margin-left: 10%; margin-top: 5%\">";
 	
-        <table border="1" cellpadding="5" style="border-color: black; margin-left: auto; margin-right: auto;">
-            <tbody>
-                <tr>
-                    <td style="background-color: lightgray;">
-                        <a href="index.php">Home</a>
-                    </td>
+// stampiamo i film che sono presenti nel carrello
+	foreach ($_SESSION['carrello'] as $k=>$v) {
+    	$output_table.="<tr>\n<td style=\"color: white; font-size: 20px\">$v</td>\n";
+	}
+		$output_table.="</tr>\n<tr>\n<td style=\"color: white; font-size: 20px\"><br />\nSomma totale: $totale\n &euro; </td>\n";
+		$output_table.="</tr>\n</table>";
 
-                    <td style="background-color: lightgray;">
-                    	<a href="AdventureMovies.php"> Avventura </a>
 
-                    </td>
 
-                    <td style="background-color: lightgray;">
-                        <a href="ActionMovies.php">Azione</a>
-                        
-                    </td>
+    
+// ok, adesso chiudiamo la connessione, tanto il db non serve piu' in questo script
+	$mysqliConnection->close();
 
-                    <td style="background-color: lightgray;">
-                        <a href="FantasyMovies.php">Fantascienza</a>
-                    </td>
-
-                    <td style="background-color: lightgray;">
-                        <a href="poliziesco.php">Poliziesco</a>
-                    </td>
-
-                    <td style="background-color: lightgray;">
-                        <a href="storico.php">Storico</a>
-                    </td>
-
-                    <td style="background-color: lightgray;">
-                        <a href="thriller.php">Thriller</a>
-                    </td>
-
-                    <td style="background-color: lightgreen;">
-                        <a href="mysql.aggiuntaMovie.php">Aggiungi movie</a>
-                    </td>
-
-                    <td style="background-color: lightgreen;">
-                        <a href="mysql.listaUtenti.php">Lista utenti</a>
-                    </td>
-                    <td style="background-color: white;">
-                        <a href="zonaPagamenti.php">
-                            <img src="loghi/cartLogo.png" alt="cart logo" height="20" />
-                        </a>
-                    </td>
-                </tr>    
-            </tbody>
-        </table>
-</form>
-<?php
-        break;
-
-    // If no match is found
-        default:
 ?>
-        <p>Errore nel sistema!</p>
 
-<?php
-    } // chiude lo switch
-} // chiude l'else
-?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<title>sessione con carrello della spesa: pagamento</title>
+	</head>
+
+	<body style= "background-color: #34495E" >
+	
+	
+		<?php
+			require("./menuConSwitch.php");
+		?>
+
+		<hr />
+
+		<h2 style=" text-align: center; color: #FDEBD0; margin-top: 20px; font-size: 30px " >Carrello</h2>
+
+
+
+
+		<?php
+		echo $output_table;
+		?>
+
+		<table style="margin-right: auto; margin-left:auto; margin-top:15%">
+			<tr>
+				<form action="decisione.php"  method="post" >
+				<td> <input type="submit" name="acquista" value="Acquista"> </td>
+				<td> <input type="submit" name="azzerra" value="Svuota il carrello"> </td>
+				</form>
+			</tr> 
+		</table>	
+
+
+	</body>
+</html>
