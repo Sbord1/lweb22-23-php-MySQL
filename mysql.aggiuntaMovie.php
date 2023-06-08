@@ -100,7 +100,7 @@ $mysqliConnection->close();
             <tbody>
                 <tr>
                     <td>
-                        <a href="index.php".php">
+                        <a href="index.php">
                             <img src="loghi/movieCamera.png" alt="camera logo" height="80"/>
                         </a>
                     </td>
