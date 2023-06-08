@@ -3,12 +3,13 @@
 	require_once("./stileInterno.php");
 	session_start();                // sempre prima di qualunque contenuto htmnl ...
 
-	if (!isset($_SESSION['accessoPermesso'])) header('Location: login.php');
+	if (!isset($_SESSION['accessoPermesso'])) header('Location: loginPage.html');
 
 // dati sul database e le tabelle (magari messi in un file a parte ...)
 
 	$db_name = "VideotecaOnlinedb";
 	$totale= $_SESSION['sommeDaPagare'];
+	$STuser_table_name = "VOuser";
 
 
 // effettuazione della connessione al database
