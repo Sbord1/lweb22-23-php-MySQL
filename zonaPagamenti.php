@@ -3,7 +3,7 @@
 	require_once("./stileInterno.php");
 	session_start();                // sempre prima di qualunque contenuto htmnl ...
 
-	if (!isset($_SESSION['accessoPermesso'])) header('Location: login.php');
+	if (!isset($_SESSION['accessoPermesso'])) header('Location: loginPage.html');
 
 // dati sul database e le tabelle (magari messi in un file a parte ...)
 	$db_name = "VideotecaOnlinedb";
@@ -30,7 +30,8 @@
 	
 // stampiamo i film che sono presenti nel carrello
 	foreach ($_SESSION['carrello'] as $k=>$v) {
-    	$output_table.="<tr>\n<td style=\"color: white; font-size: 20px\">$v</td>\n";}
+    	$output_table.="<tr>\n<td style=\"color: white; font-size: 20px\">$v</td>\n";
+	}
 		$output_table.="</tr>\n<tr>\n<td style=\"color: white; font-size: 20px\"><br />\nSomma totale: $totale\n &euro; </td>\n";
 		$output_table.="</tr>\n</table>";
 
