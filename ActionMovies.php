@@ -2,47 +2,50 @@
 	error_reporting (E_ALL &~E_NOTICE);
 	require_once("./stileInterno.php");
 
-	session_start();               
-	if (!isset($_SESSION['accessoPermesso'])) header('Location: loginPage.html');
+	session_start();
 
 
+	// aggiungo film al carrello se provengo da aggiungiCarrello.php e ho cliccato "aggiungiCarrello" e aggiorno variabili
+	if (isset($_POST['aggiungiCarrello'])){
+		$_SESSION['carrello'][] = $_POST['title'];
+		$_SESSION['spesaFinora']+=$_POST['costo'];
+		$_SESSION['sommeDaPagare']+=$_POST['costo'];
+   }
 
-
-	
-// dati sul database e le tabelle (magari messi in un file a parte ...)
+	// dati sul database e le tabelle (magari messi in un file a parte ...)
 	$db_name = "VideotecaOnlinedb";
 	$VOmovie_azione_table = "VOmovieAzione";
 
-
-// effettuazione della connessione al database
-//
+	// effettuazione della connessione al database
 	$mysqliConnection = new mysqli("localhost", "riccardo", "password", $db_name);
 
-
-// controllo della connessione (versione "procedurale,
-// as opposed to the "object-oriented version" msqli->connect_errno...
+	// controllo della connessione (versione "procedurale,
+	// as opposed to the "object-oriented version" msqli->connect_errno...
 
 	if (mysqli_connect_errno()) {
-    	printf("Oops, abbiamo problemi con la connessione al db: %s\n", mysqli_connect_error());
-    	exit();
+		printf("Oops, abbiamo problemi con la connessione al db: %s\n", mysqli_connect_error());
+		exit();
 	}
 
-
-
-//sql query per ottenere tutti gli attributi dei film
+	//sql query per ottenere tutti gli attributi dei film
 	$sql = "SELECT *
-    	FROM $VOmovie_azione_table
+		FROM $VOmovie_azione_table
 	";
 
-// il risultato della query va in $resultQ
+	// il risultato della query va in $resultQ
 	if (!$resultQ = mysqli_query($mysqliConnection, $sql)) {
-   	 printf("Dammit! Can't execute movie select query.\n");
-  	exit();
- }
+	printf("Dammit! Can't execute movie select query.\n");
+	exit();
+	}
+	
+	/*
+	Se non e' stato fatto il login il visitatore puo' comunque visualizzare tutti i film disponibili
+	ma non potra' effettuare l'acquisto (aggiungiCarrello.php controlla se il login e' stato effettuato)
+	*/
 
-// costruzione elenco film
-// costruiamo un elemento input di tipo image,
-// con nome comune "selection"
+	// costruzione elenco film
+	// costruiamo un elemento input di tipo image,
+	// con nome comune "selection"
 
 	$elenco="<table class= tablecenter>\n <tr>\n";
 	$counter=0; //variabile per avere solo 3 film per riga
@@ -54,7 +57,7 @@
 		$elenco.="<form action=\"./aggiungiCarrello.php\" method=\"post\">\n";
 		$elenco.="<td class=\"img\">\n  <input type=\"image\" src=\"$row[imgPath]\" name=\"selection\" value=\"$row[title]\" height=\"450px\"/>\n";
 		
-	// costruzione hidden field che ci servirà nella zona aggiungiCarrello per ottenere il nome del film e della categoria
+	// costruzione hidden field che ci servira' nella zona aggiungiCarrello per ottenere il nome del film e della categoria
 		$elenco.="<input type=\"hidden\" name=\"title\" value=\"$row[title]\">\n";
 		$elenco.="<input type=\"hidden\" name=\"dbCategoria\" value=\"$VOmovie_azione_table\"> </td> \n </form>\n";
 		$counter++;
@@ -89,17 +92,25 @@
 			<a href="index.php">
         		<img src="loghi/home.png" alt="home" style="float: right; height: 30px;" />
     		</a>
+
+			<?php
+			// Se e' stato fatto il login compare il logo del carrello
+            if(isset($_SESSION['userName'])) {
+				echo "<a href=\"zonaPagamenti.php\">
+						<img src=\"loghi/cartLogo.png\" alt=\"cart logo\" style=\"float: right; height: 30px;\"/>
+					</a>";
+			}
+
+			?>
+
 		</p>
 	
 		<h1 style=" text-align: center; color: #FDEBD0; margin-top: 20px " >Action movies </h1>
 	
 		<p style="text-align: center; color: white">
-        	Film d'azione disponibili nel nostro store. Cliccando sulla copertina del film potrai visualizzare la pagina wikipedia relativa.
+        	Film d'azione disponibili nel nostro store. Cliccando sulla copertina del film potrai effettuarne l'acquisto.
     	</p>
 
-  
-<!-- Inserisce la tabella con le categorie di film ed eventualmente anche il carrello se e' stato effettuato l'accesso -->
-     <?php require("./menuConSwitch.php"); ?>
 
 	<table>
 
@@ -108,7 +119,7 @@
 	</table>
 	
 	
-<!-- back to top -->	
+	<!-- back to top -->	
 	<table class="tablecenter">
 		<tbody>
             <tr>
