@@ -79,7 +79,7 @@
             </p>
 
             <p style="text-align: center;">
-                Password: <input type="text" name="password" size="30" required>
+                Password: <input type="password" name="password" size="30" required>
             </p>
             
             <div style="text-align: center; padding: 10px">
