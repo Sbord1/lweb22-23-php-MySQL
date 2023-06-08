@@ -3,7 +3,7 @@
 	require_once("./stileInterno.php");
 	session_start();                // sempre prima di qualunque contenuto htmnl ...
 
-	if (!isset($_SESSION['accessoPermesso'])) header('Location: login.php');
+	if (!isset($_SESSION['accessoPermesso'])) header('Location: loginPage.html');
 
 // dati sul database e le tabelle (magari messi in un file a parte ...)
 	$db_name = "VideotecaOnlinedb";
@@ -67,12 +67,41 @@
     $value.=$title;
 	$value.="\n(&euro; $row[costoMovie])"; 
 
-    
+	$page = "";
+
+    // Controllo categoria
+	switch($dbCategoria) {
+
+		case "VOmovieAvventura":
+			$page = "AdventureMovies.php";
+			break;
+
+		case "VOmovieAzione":
+			$page = "ActionMovies.php";
+			break;
+
+		case "VOmovieFantascienza":
+			$page = "FantasyMovies.php";
+			break;
+
+		case "VOmoviePoliziesco":
+			$page = "poliziesco.php";
+			break;
+
+		case "VOmovieStorico":
+			$page = "storico.php";
+			break;
+
+		case "VOmovieThriller":
+			$page = "thriller.php";
+			break;
+
+	}
 
 	// bottoni
 	
-	$output_buttons.="<table style=\"margin-right: auto; margin-left:auto; margin-top:15%\">\n<tr>\n<td>\n";
-	$output_buttons.="<form action=\"./index.php\"  method=\"post\" >\n";
+	$output_buttons="<table style=\"margin-right: auto; margin-left:auto; margin-top:15%\">\n<tr>\n<td>\n";
+	$output_buttons.="<form action=\"./$page\"  method=\"post\" >\n";
 	$output_buttons.="<input type=\"submit\" name=\"aggiungiCarrello\" value=\"Aggiungi al carrello\">\n"; // bottone aggiungiCarrello
 	$output_buttons.= "<input type=\"hidden\" name=\"title\" value=\"$value\">\n <input type=\"hidden\" name=\"costo\" value=\"$prezz\"></form>\n </td>\n <td>\n"; // hidden fields
 	$output_buttons.="<form action=\"./index.php\"  method=\"post\" >\n<input type=\"submit\" name=\"azzerra\" value=\"Go back\">\n </form>\n </td>\n</tr>\n</table>\n";
