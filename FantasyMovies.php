@@ -2,9 +2,18 @@
 	error_reporting (E_ALL &~E_NOTICE);
 	require_once("./stileInterno.php");
 
-	session_start();                // sempre prima di qualunque contenuto htmnl ...
+	session_start();
 
-	if (!isset($_SESSION['accessoPermesso'])) header('Location: loginPage.html');
+	if(!isset($_SESSION['sommeDaPagare'])) {
+		$_SESSION['sommeDaPagare'] = 0;
+	}
+
+	// aggiungo film al carrello se provengo da aggiungiCarrello.php e ho cliccato "aggiungiCarrello" e aggiorno variabili
+	if (isset($_POST['aggiungiCarrello'])){
+		$_SESSION['carrello'][] = $_POST['title'];
+		$_SESSION['spesaFinora']+=$_POST['costo'];
+		  $_SESSION['sommeDaPagare']+=$_POST['costo'];
+   }
 
 // dati sul database e le tabelle (magari messi in un file a parte ...)
 	$db_name = "VideotecaOnlinedb";
@@ -16,8 +25,7 @@
 	$mysqliConnection = new mysqli("localhost", "riccardo", "password", $db_name);
 
 
-// controllo della connessione (versione "procedurale,
-// as opposed to the "object-oriented version" msqli->connect_errno...
+// controllo della connessione
 
 	if (mysqli_connect_errno()) {
     printf("Oops, abbiamo problemi con la connessione al db: %s\n", mysqli_connect_error());
@@ -36,6 +44,11 @@
 		printf("Dammit! Can't execute movie select query.\n");
   		exit();
  	}
+
+/*
+	Se non e' stato fatto il login il visitatore puo' comunque visualizzare tutti i film disponibili
+	ma non potra' effettuare l'acquisto (aggiungiCarrello.php controlla se il login e' stato effettuato)
+*/
  
 // costruzione elenco film
 // costruiamo un elemento input di tipo image,
@@ -86,17 +99,24 @@
 		<a href="index.php">
         	<img src="loghi/home.png" alt="home" style="float: right; height: 30px;" />
     	</a>
+
+		<?php
+			// Se e' stato fatto il login compare il logo del carrello
+            if(isset($_SESSION['userName'])) {
+				echo "<a href=\"zonaPagamenti.php\">
+						<img src=\"loghi/cartLogo.png\" alt=\"cart logo\" style=\"float: right; height: 30px;\"/>
+					</a>";
+			}
+		?>
+
 	</p>
 	
 	<h1 style=" text-align: center; color: #FDEBD0; margin-top: 20px " >Fantasy movies </h1>
 	
 	<p style="text-align: center; color:white">
-        	Film di fantascienza disponibili nel nostro store. Cliccando sulla copertina del film potrai visualizzare la pagina wikipedia relativa.
+        	Film di fantascienza disponibili nel nostro store. Cliccando sulla copertina del film potrai effettuarne l'acquisto.
     </p>
 
-  
-<!-- Inserisce la tabella con le categorie di film ed eventualmente anche il carrello se e' stato effettuato l'accesso -->
-     <?php require("./menuConSwitch.php"); ?>
 
 	<table>
 		<?php echo $elenco ?>; <!-- mostra film -->
