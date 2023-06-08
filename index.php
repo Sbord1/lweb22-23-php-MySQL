@@ -3,13 +3,6 @@
 	error_reporting(E_ALL);
 
 	session_start();
-
-// aggiungo film al carrello se provengo da aggiungiCarrello.php e ho cliccato "aggiungiCarrello" e aggiorno variabili
-	if (isset($_POST['aggiungiCarrello'])){
- 		$_SESSION['carrello'][] = $_POST['title'];
- 		$_SESSION['spesaFinora']+=$_POST['costo'];
-   		$_SESSION['sommeDaPagare']+=$_POST['costo'];
-    }
 ?>
 
 <?xml version="1.0" encoding="UTF-8"?>
@@ -54,7 +47,7 @@
             }
             ?>
             
-            <!-- Stampiamo la possibilità di registrarsi nel caso in cui l'utente non abbia fatto il login --> 
+            <!-- Stampiamo la possibilita' di registrarsi nel caso in cui l'utente non sia registrato nel database --> 
           
           <?php  
             if(!isset($_SESSION['userName'])){
