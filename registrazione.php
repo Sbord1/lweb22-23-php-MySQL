@@ -1,18 +1,7 @@
 <?php
-	error_reporting(E_ALL &~E_NOTICE);
+
+	require_once("./connection.php");
 	
-	$db_name = "VideotecaOnlinedb";
-	$VOuser_table="VOuser";
-
-// Connessione al database
-	$mysqliConnection = new mysqli("localhost", "riccardo", "password", $db_name);
-
-// Controllo connessione
-	if (mysqli_connect_errno()) {
-    	printf("Errore! Problemi con la connessione al db: %s\n", mysqli_connect_error());
-    	exit();
-	}
-
 //print_r($_POST);
 
 	if (isset($_POST['invio']) && $_POST['invio']=="Aggiungi" && $_POST['nome'] && $_POST['password']) {
