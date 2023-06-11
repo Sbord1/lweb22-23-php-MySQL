@@ -1,20 +1,9 @@
 <?php
-	ini_set('display_errors', 1);
-	error_reporting(E_ALL);
-
+	
+	require_once("./connection.php");
 	session_start();
 
-	$db_name = "VideotecaOnlinedb";
-	$VOuser_table = "VOuser";
-
-// Connessione al database
-	$mysqliConnection = new mysqli("localhost", "riccardo", "password", $db_name);
-
-// Controllo connessione
-	if (mysqli_connect_errno()) {
-   		printf("Errore! Problemi con la connessione al db: %s\n", mysqli_connect_error());
-    	exit();
-}
+	
 
 // Selezioniamo tutti gli utenti dalla tabella VOuser
 	$sqlQuery = "SELECT * FROM $VOuser_table";
