@@ -1,5 +1,6 @@
 <?php
-	error_reporting (E_ALL &~E_NOTICE);
+	
+	require_once("./connection.php");
 	require_once("./stileInterno.php");
 
 	session_start();
@@ -14,23 +15,6 @@
 		$_SESSION['spesaFinora']+=$_POST['costo'];
 		  $_SESSION['sommeDaPagare']+=$_POST['costo'];
    }
-
-// dati sul database e le tabelle (magari messi in un file a parte ...)
-	$db_name = "VideotecaOnlinedb";
-	$VOmovie_fantascienza_table = "VOmovieFantascienza";
-
-
-// effettuazione della connessione al database
-
-	$mysqliConnection = new mysqli("localhost", "riccardo", "password", $db_name);
-
-
-// controllo della connessione
-
-	if (mysqli_connect_errno()) {
-    printf("Oops, abbiamo problemi con la connessione al db: %s\n", mysqli_connect_error());
-    exit();
-}
 
 
 
