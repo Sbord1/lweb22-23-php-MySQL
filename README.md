@@ -1,4 +1,4 @@
-LWEB 22/23 Primo Homework: PHP - MySQL :clapper:
+LWEB 22/23 Secondo Homework: PHP - MySQL :clapper:
 
 Si tratta di un ipotetico sito online per una videoteca fisica. :movie_camera:
 
