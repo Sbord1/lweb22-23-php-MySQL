@@ -7,12 +7,11 @@
 	if (!isset($_SESSION['accessoPermesso'])) header('Location: loginPage.html');
 
 
-	$totale= $_SESSION['sommeDaPagare'];
+	if(!isset($_SESSION['sommeDaPagare']))
+		$totale = 0;
+	else
+		$totale = $_SESSION['sommeDaPagare'];
 	
-
-
-
-
 
 	$output="";
 	
