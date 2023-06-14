@@ -5,25 +5,13 @@
 
 	if (!isset($_SESSION['accessoPermesso'])) header('Location: loginPage.html');
 
-// dati sul database e le tabelle (magari messi in un file a parte ...)
-	$db_name = "VideotecaOnlinedb";
-	$totale= $_SESSION['sommeDaPagare'];
+	if(!isset($_SESSION['sommeDaPagare']))
+		$totale = 0;
+	else
+		$totale = $_SESSION['sommeDaPagare'];
 
 
-// effettuazione della connessione al database
-
-	$mysqliConnection = new mysqli("localhost", "riccardo", "password", $db_name);
-
-
-// controllo della connessione (versione "procedurale,
-// as opposed to the "object-oriented version" msqli->connect_errno...
-
-	if (mysqli_connect_errno()) {
-    	printf("Oops, abbiamo problemi con la connessione al db: %s\n", mysqli_connect_error());
-    	exit();
-	}
-
-
+	require_once("./connection.php");
 
 	$output_table="";
 	$output_table.="<table style= \" margin-left: 10%; margin-top: 5%\">";
@@ -36,8 +24,6 @@
 		$output_table.="</tr>\n</table>";
 
 
-
-    
 // ok, adesso chiudiamo la connessione, tanto il db non serve piu' in questo script
 	$mysqliConnection->close();
 
