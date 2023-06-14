@@ -33,7 +33,7 @@ if (mysqli_connect_errno()) {
 ///////////////////////////////////////////////////////////////////////////////
 // creazione del database
 
-$queryCreazioneDatabase = "CREATE DATABASE $db_name";
+$queryCreazioneDatabase = "CREATE DATABASE IF NOT EXISTS $db_name";
 // il risultato della query va in $resultQ
 $resultQ = mysqli_query($mysqliConnection, $queryCreazioneDatabase);
 if ($resultQ) {
